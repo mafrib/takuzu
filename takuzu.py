@@ -51,9 +51,9 @@ class Board:
             print(*row, sep = '\t')
 
     def copy(self):
-        newBoard = Board(len(self))
-        for i in range(len(newBoard)):
-            for j in range(len(newBoard)):
+        newBoard = Board(len(self.board))
+        for i in range(len(self.board)):
+            for j in range(len(self.board)):
                 newBoard.update(i, j, self.get_number(i,j))
         return newBoard
 
