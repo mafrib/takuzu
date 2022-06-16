@@ -44,7 +44,7 @@ class Board:
         """Atualiza o valor de uma posição no tabuleiro."""
         self.board[row, col] = number
 
-    def print_board(self):
+    def print(self):
         """Imprime o tabuleiro."""
         for row in self.board:
             print(*row, sep = '\t')
