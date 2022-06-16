@@ -85,8 +85,17 @@ class Board:
             > from sys import stdin
             > stdin.readline()
         """
-        # TODO
-        pass
+        from sys import stdin
+        n = int(stdin.readline())
+        board = Board(n)
+
+        for i in range(n):
+            line = tuple(map(int, stdin.readline().split()))
+            for j in range(n):
+                board.update(i, j, line[j])
+
+        return board
+
 
     # TODO: outros metodos da classe
 
