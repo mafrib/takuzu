@@ -40,6 +40,12 @@ class Board:
         """"Inicializa um tabuleiro vazio."""
         self.board = np.full((n,n), 2)
 
+
+    def __len__(self):
+        """Devolve a dimensão (N) do tabuleiro N x N"""
+        return len(self.board)
+
+
     def update(self, row: int, col: int, number: int):
         """Atualiza o valor de uma posição no tabuleiro."""
         self.board[row, col] = number
