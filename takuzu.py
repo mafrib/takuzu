@@ -2,7 +2,7 @@
 # Devem alterar as classes e funções neste ficheiro de acordo com as instruções do enunciado.
 # Além das funções e classes já definidas, podem acrescentar outras que considerem pertinentes.
 
-# Grupo 43:
+# Grupo al043:
 # 99188 Carlos Vaz
 # 99268 Mafalda Ribeiro
 
