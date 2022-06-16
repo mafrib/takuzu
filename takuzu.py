@@ -36,6 +36,19 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu."""
 
+    def __init__(self, n):
+        """"Inicializa um tabuleiro vazio"""
+        self.board = np.full((n,n), 2)
+
+    def update(self, row: int, col: int, number: int):
+        """Atualiza o valor de uma posição no tabuleiro."""
+        self.board[row, col] = number
+
+    def print_board(self):
+        """Imprime o tabuleiro."""
+        for row in self.board:
+            print(*row, sep = '\t')
+
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
         # TODO
