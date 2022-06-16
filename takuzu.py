@@ -50,6 +50,13 @@ class Board:
         for row in self.board:
             print(*row, sep = '\t')
 
+    def copy(self):
+        newBoard = Board(len(self))
+        for i in range(len(newBoard)):
+            for j in range(len(newBoard)):
+                newBoard.update(i, j, self.get_number(i,j))
+        return newBoard
+
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col]
