@@ -44,6 +44,7 @@ class Board:
         """Atualiza o valor de uma posição no tabuleiro."""
         self.board[row, col] = number
 
+    #TODO Fazer __str__
     def print(self):
         """Imprime o tabuleiro."""
         for row in self.board:
