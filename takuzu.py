@@ -135,6 +135,21 @@ class Board:
             return (self.board[row, col - 1], self.board[row, col + 1])
 
 
+    def is_valid_adjacent(self) -> bool:
+        """Devolve True se cada linha e coluna não tiver mais do
+        que dois números iguais adjacentes."""
+        for i in range(len(self.board)):
+            for j in range(len(self.board)):
+                adjacent_vertical = self.adjacent_vertical_numbers(i, j)
+                adjacent_horizontal = self.adjacent_horizontal_numbers(i, j)
+                current = self.get_number(i, j)
+                if (current == adjacent_vertical[0] == adjacent_vertical[1]
+                    or current == adjacent_horizontal[0] == adjacent_horizontal[1]):
+                    return False
+        return True
+
+
+
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
