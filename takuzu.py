@@ -127,8 +127,8 @@ class Board:
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        # TODO
-        pass
+
+        self.currentState = TakuzuState(board)
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
