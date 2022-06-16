@@ -66,6 +66,40 @@ class Board:
                 newBoard.update(i, j, self.get_number(i,j))
         return newBoard
 
+
+    def get_line(self, row: int):
+        """Devolve tuplo contendo a respetiva linha do tabuleiro"""
+        return tuple(self.board[row])
+
+
+    def get_col(self, col: int):
+        """Devolve tuplo contendo a respetiva coluna do tabuleiro"""
+        return tuple(self.board[:, col])
+
+
+    def get_lines(self):
+        """Devolve tuplo contendo as linhas do tabuleiro"""
+        lines = ()
+        for i in range(len(self.board)):
+            lines += (self.get_line(i),)
+        return lines
+
+
+    def get_cols(self):
+        """Devolve tuplo contendo as colunas do tabuleiro"""
+        cols = ()
+        for i in range(len(self.board)):
+            cols += (self.get_col(i),)
+        return cols
+
+
+    def all_diff(self, tups) -> bool:
+        """Devolve True se todos os subtuplos forem diferentes uns dos outros."""
+        if (len(set(tups)) == len(self.board)):
+            return True
+        return False
+
+
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col]
