@@ -198,6 +198,7 @@ class Takuzu(Problem):
 
         self.currentState = TakuzuState(board)
 
+
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
@@ -221,12 +222,37 @@ class Takuzu(Problem):
         newState.board.update(action[0], action[1], action[2])
         return newState
 
+
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
-        # TODO
-        pass
+
+        for i in range(len(state.board)):
+            for j in range(len(state.board)):
+                if state.board.get_number(i, j) == 2:
+                    return False
+
+        lines = state.board.get_lines()
+        cols = state.board.get_cols()
+
+        if not state.board.all_diff(lines) or not state.board.all_diff(cols):
+            return False
+
+        for line in lines:
+            if not state.board.is_valid_count(line):
+                return False
+        for col in cols:
+            if not state.board.is_valid_count(col):
+                return False
+
+        for i in range(len(state.board)):
+            for j in range(len(state.board)):
+                if not state.board.is_valid_adjacent():
+                    return False
+
+        return True
+
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
