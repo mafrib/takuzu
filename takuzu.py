@@ -50,13 +50,16 @@ class Board:
         """Atualiza o valor de uma posição no tabuleiro."""
         self.board[row, col] = number
 
+
     #TODO Fazer __str__
     def print(self):
         """Imprime o tabuleiro."""
         for row in self.board:
             print(*row, sep = '\t')
 
+
     def copy(self):
+        """Devolve uma cópia profunda do tabuleiro"""
         newBoard = Board(len(self.board))
         for i in range(len(self.board)):
             for j in range(len(self.board)):
