@@ -7,6 +7,7 @@
 # 99268 Mafalda Ribeiro
 
 import sys
+import numpy as np
 from search import (
     Problem,
     Node,
