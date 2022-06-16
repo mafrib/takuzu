@@ -125,8 +125,15 @@ class Takuzu(Problem):
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        # TODO
-        pass
+
+        actions = []
+        for row in range(len(state)):
+            for col in range(len(state)):
+                if state.board.get_number(row, col) == 2:
+                   actions.append((row, col, 0), (row, col, 1))
+
+        return actions
+
 
     def result(self, state: TakuzuState, action):
         """Retorna o estado resultante de executar a 'action' sobre
