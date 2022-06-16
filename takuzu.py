@@ -148,8 +148,10 @@ class Takuzu(Problem):
         'state' passado como argumento. A ação a executar deve ser uma
         das presentes na lista obtida pela execução de
         self.actions(state)."""
-        # TODO
-        pass
+
+        newState = state.board.copy()
+        return newState.update(action[0], action[1], action[2])
+
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
