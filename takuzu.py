@@ -149,9 +149,9 @@ class Takuzu(Problem):
         das presentes na lista obtida pela execução de
         self.actions(state)."""
 
-        newState = state.board.copy()
-        return newState.update(action[0], action[1], action[2])
-
+        newState = TakuzuState(state.board.copy())
+        newState.board.update(action[0], action[1], action[2])
+        return newState
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
