@@ -37,7 +37,7 @@ class Board:
     """Representação interna de um tabuleiro de Takuzu."""
 
     def __init__(self, n):
-        """"Inicializa um tabuleiro vazio"""
+        """"Inicializa um tabuleiro vazio."""
         self.board = np.full((n,n), 2)
 
     def update(self, row: int, col: int, number: int):
