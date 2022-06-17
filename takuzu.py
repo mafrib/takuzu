@@ -108,7 +108,7 @@ class Board:
         coluna é válido de acordo com as restrições do problema."""
         zeros = tup.count(0)
         ones = tup.count(1)
-        return True if zeros - ones < 2 else False
+        return True if abs(zeros - ones) < 2 else False
 
 
     def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
