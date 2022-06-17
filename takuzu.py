@@ -202,10 +202,11 @@ class Takuzu(Problem):
         partir do estado passado como argumento."""
 
         actions = []
-        for i in range(len(state)):
-            for j in range(len(state)):
+        for i in range(len(state.board)):
+            for j in range(len(state.board)):
                 if state.board.get_number(i, j) == 2:
-                   actions.append((i, j, 0), (i, j, 1))
+                   actions.append((i, j, 0))
+                   actions.append((i, j, 1))
 
         return actions
 
