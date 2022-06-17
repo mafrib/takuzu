@@ -46,16 +46,14 @@ class Board:
         return len(self.board)
 
 
+    def __str__(self):
+        """Retorna representação externa do tabuleiro"""
+        return "\n".join("\t".join(map(str, row)) for row in self.board)
+
+
     def update(self, row: int, col: int, number: int):
         """Atualiza o valor de uma posição no tabuleiro."""
         self.board[row, col] = number
-
-
-    #TODO Fazer __str__
-    def print(self):
-        """Imprime o tabuleiro."""
-        for row in self.board:
-            print(*row, sep = '\t')
 
 
     def copy(self):
