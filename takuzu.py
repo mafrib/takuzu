@@ -166,11 +166,25 @@ class Board:
         board = Board(n)
 
         for i in range(n):
-            line = tuple(map(int, read[i].split()))
+            line = tuple(map(int, stdin.readline().split()))
             for j in range(n):
                 board.update(i, j, line[j])
 
         return board
+
+        # # TODO remover; só para testes locais
+        # import fileinput
+        # read = list(fileinput.input("./tests/input_T01"))
+        # n = int(read[0])
+        # read = read[1:]
+        # board = Board(n)
+
+        # for i in range(n):
+        #     line = tuple(map(int, read[i].split()))
+        #     for j in range(n):
+        #         board.update(i, j, line[j])
+
+        # return board
 
 
     # TODO: outros metodos da classe
@@ -191,15 +205,48 @@ class Takuzu(Problem):
         for i in range(len(state.board)):
             for j in range(len(state.board)):
                 if state.board.get_number(i, j) == 2:
-                  if tuple(state.board.board[i]).count(0) >= len(state.board) / 2:
-                    actions.append((i, j, 1))
-                  elif tuple(state.board.board[i]).count(1) >= len(state.board) / 2:
-                    actions.append((i, j, 0))
+                  if tuple(state.board.board[i]).count(0) >= np.ceiling(len(state.board) / 2):
+                      if Takuzu.is_valid_state(self.result(state, (i, j, 1))):
+                          actions.append((i, j, 1))
+                  elif tuple(state.board.board[i]).count(1) >= np.ceiling(len(state.board) / 2):
+                      if Takuzu.is_valid_state(self.result(state, (i, j, 1))):
+                          actions.append((i, j, 0))
                   else:
-                    actions.append((i, j, 0))
-                    actions.append((i, j, 1))
+                      if Takuzu.is_valid_state(self.result(state, (i, j, 0))):
+                          actions.append((i, j, 0))
+                      elif Takuzu.is_valid_state(self.result(state, (i, j, 1))):
+                          actions.append((i, j, 1))
+
 
         return actions
+
+
+    @staticmethod
+    def is_valid_state(state: TakuzuState) -> bool:
+        """Devolve True se o estado cumprir as seguintes restrições:
+        - linhas e colunas diferentes entre si
+        - número de zeros e uns válidos
+        - restrições de adjacência"""
+
+        lines = state.board.get_lines()
+        cols = state.board.get_cols()
+
+        if not state.board.all_diff(lines) or not state.board.all_diff(cols):
+            return False
+
+        for line in lines:
+            if not state.board.is_valid_count(line):
+                return False
+        for col in cols:
+            if not state.board.is_valid_count(col):
+                return False
+
+        for i in range(len(state.board)):
+            for j in range(len(state.board)):
+                if not state.board.is_valid_adjacent():
+                    return False
+
+        return True
 
 
     def result(self, state: TakuzuState, action):
@@ -223,23 +270,23 @@ class Takuzu(Problem):
                 if state.board.get_number(i, j) == 2:
                     return False
 
-        lines = state.board.get_lines()
-        cols = state.board.get_cols()
+        # lines = state.board.get_lines()
+        # cols = state.board.get_cols()
 
-        if not state.board.all_diff(lines) or not state.board.all_diff(cols):
-            return False
+        # if not state.board.all_diff(lines) or not state.board.all_diff(cols):
+        #     return False
 
-        for line in lines:
-            if not state.board.is_valid_count(line):
-                return False
-        for col in cols:
-            if not state.board.is_valid_count(col):
-                return False
+        # for line in lines:
+        #     if not state.board.is_valid_count(line):
+        #         return False
+        # for col in cols:
+        #     if not state.board.is_valid_count(col):
+        #         return False
 
-        for i in range(len(state.board)):
-            for j in range(len(state.board)):
-                if not state.board.is_valid_adjacent():
-                    return False
+        # for i in range(len(state.board)):
+        #     for j in range(len(state.board)):
+        #         if not state.board.is_valid_adjacent():
+        #             return False
 
         return True
 
@@ -253,9 +300,11 @@ class Takuzu(Problem):
 
 
 if __name__ == "__main__":
-    # TODO:
     # Ler o ficheiro do standard input,
     # Usar uma técnica de procura para resolver a instância,
     # Retirar a solução a partir do nó resultante,
     # Imprimir para o standard output no formato indicado.
-    pass
+    board = Board.parse_instance_from_stdin()
+    problem = Takuzu(board)
+    goal_node = depth_first_tree_search(problem)
+    print(goal_node.state.board)
