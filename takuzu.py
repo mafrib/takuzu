@@ -205,10 +205,10 @@ class Takuzu(Problem):
         for i in range(len(state.board)):
             for j in range(len(state.board)):
                 if state.board.get_number(i, j) == 2:
-                  if tuple(state.board.board[i]).count(0) >= np.ceiling(len(state.board) / 2):
+                  if tuple(state.board.board[i]).count(0) >= np.ceil(len(state.board) / 2):
                       if Takuzu.is_valid_state(self.result(state, (i, j, 1))):
                           actions.append((i, j, 1))
-                  elif tuple(state.board.board[i]).count(1) >= np.ceiling(len(state.board) / 2):
+                  elif tuple(state.board.board[i]).count(1) >= np.ceil(len(state.board) / 2):
                       if Takuzu.is_valid_state(self.result(state, (i, j, 1))):
                           actions.append((i, j, 0))
                   else:
