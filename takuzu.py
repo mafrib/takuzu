@@ -205,8 +205,13 @@ class Takuzu(Problem):
         for i in range(len(state.board)):
             for j in range(len(state.board)):
                 if state.board.get_number(i, j) == 2:
-                   actions.append((i, j, 0))
-                   actions.append((i, j, 1))
+                  if tuple(state.board.board[i]).count(0) >= len(state.board) / 2:
+                    actions.append((i, j, 1))
+                  elif tuple(state.board.board[i]).count(1) >= len(state.board) / 2:
+                    actions.append((i, j, 0))
+                  else:
+                    actions.append((i, j, 0))
+                    actions.append((i, j, 1))
 
         return actions
 
