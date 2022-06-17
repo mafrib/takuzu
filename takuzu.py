@@ -160,23 +160,9 @@ class Board:
             > stdin.readline()
         """
 
-        # # TODO voltar a mudar para a submissão
-        # from sys import stdin
-        # n = int(stdin.readline())
-        # board = Board(n)
-
-        # for i in range(n):
-        #     line = tuple(map(int, stdin.readline().split()))
-        #     for j in range(n):
-        #         board.update(i, j, line[j])
-
-        # return board
-
-        # TODO remover; só para testes locais
-        import fileinput
-        read = list(fileinput.input("./tests/input_T01"))
-        n = int(read[0])
-        read = read[1:]
+        # TODO voltar a mudar para a submissão
+        from sys import stdin
+        n = int(stdin.readline())
         board = Board(n)
 
         for i in range(n):
