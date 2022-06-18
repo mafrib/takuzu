@@ -112,21 +112,57 @@ class Board:
         else:
             return (self.board[row, col - 1], self.board[row, col + 1])
 
+    def check_equal_adjacent(self, row: int, col: int) -> int:
+        """Devolve o número a preencher caso os números adjacentes sejam
+        iguais entre si. Caso contrário, devolve 2."""
 
-    def is_valid_adjacent(self) -> bool:
-        """Devolve True se cada linha e coluna não tiver mais do
-        que dois números iguais adjacentes."""
-        for i in range(len(self.board)):
-            for j in range(len(self.board)):
-                adjacent_vertical = self.adjacent_vertical_numbers(i, j)
-                adjacent_horizontal = self.adjacent_horizontal_numbers(i, j)
-                current = self.get_number(i, j)
-                if (current == adjacent_vertical[0] == adjacent_vertical[1]
-                    or current == adjacent_horizontal[0] == adjacent_horizontal[1]):
-                    return False
-        return True
+        adjacent_horizontal = self.adjacent_horizontal_numbers(row, col)
+        adjacent_vertical = self.adjacent_vertical_numbers(row, col)
+        if (
+            adjacent_horizontal[0] == adjacent_horizontal[1] == 1
+            or adjacent_vertical[0] == adjacent_vertical[1] == 1
+        ):
+            print("adjacent_horizontal:", adjacent_horizontal)
+            print("adjacent_vertical:", adjacent_vertical)
+            return 0
+        elif (
+            adjacent_horizontal[0] == adjacent_horizontal[1] == 0
+            or adjacent_vertical[0] == adjacent_vertical[1] == 0
+        ):
+            return 1
+        else:
+            return 2
 
+    def check_counter_row(self, row_number: int) -> int:
+        """Devolve o número a preencher caso o número de zeros ou uns
+        já tenha chegado ao limite da linha. Caso nenhum tenha
+        chegado ao limite, devolve 2."""
 
+        row = self.get_row(row_number)
+        limit = np.ceil(len(self.board) / 2)
+        if row.count(0) == limit:
+            return 1
+        elif row.count(1) == limit:
+            return 0
+        else:
+            return 2
+
+    def check_counter_col(self, col_number: int) -> int:
+        """Devolve o número a preencher caso o número de zeros ou uns
+        já tenha chegado ao limite da coluna. Caso nenhum tenha
+        chegado ao limite, devolve 2."""
+
+        col = self.get_col(col_number)
+        limit = np.ceil(len(self.board) / 2)
+        # print("Limit: ", limit)
+        # print("Zeros: ", col.count(0))
+        # print("Ones:", col.count(1))
+        if col.count(0) == limit:
+            return 1
+        elif col.count(1) == limit:
+            return 0
+        else:
+            return 2
 
     @staticmethod
     def parse_instance_from_stdin():
