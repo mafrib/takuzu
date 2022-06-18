@@ -124,8 +124,6 @@ class Board:
             adjacent_horizontal[0] == adjacent_horizontal[1] == 1
             or adjacent_vertical[0] == adjacent_vertical[1] == 1
         ):
-            print("adjacent_horizontal:", adjacent_horizontal)
-            print("adjacent_vertical:", adjacent_vertical)
             return 0
         elif (
             adjacent_horizontal[0] == adjacent_horizontal[1] == 0
@@ -291,6 +289,13 @@ class Takuzu(Problem):
                     if state.board.get_number(i, j) == 2:
                         actions.append((i, j, number_to_place))
 
+        if actions == []:
+            for i in range(len(state.board)):
+                for j in range(len(state.board)):
+                    if state.board.get_number(i, j) == 2:
+                        actions.append((i, j, 0))
+                        actions.append((i, j, 1))
+
         return list(set(actions))
 
     @staticmethod
@@ -343,9 +348,13 @@ class Takuzu(Problem):
 
         # lines = state.board.get_lines()
         # cols = state.board.get_cols()
+        rows = state.board.get_rows()
+        cols = state.board.get_cols()
 
         # if not state.board.all_diff(lines) or not state.board.all_diff(cols):
         #     return False
+        if not state.board.all_diff(rows) or not state.board.all_diff(cols):
+            return False
 
         # for line in lines:
         #     if not state.board.is_valid_count(line):
