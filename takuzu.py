@@ -163,6 +163,50 @@ class Board:
         else:
             return 2
 
+    def two_adjacents_horizontal(self, row_number: int):
+        """Devolve ações a executar caso existam dois números
+        iguais seguidos adjacentes na mesma linha"""
+        actions = []
+        row = self.get_row(row_number)
+        for j in range(1, len(self.board)):
+            current = self.get_number(row_number, j)
+            previous = self.get_number(row_number, j - 1)
+            before_adjacency = self.get_number(row_number, j - 2)
+            after_adjacency = self.get_number(row_number, j + 1)
+            if current == previous == 0:
+                if before_adjacency == 2:
+                    actions.append((row_number, j - 2, 1))
+                if after_adjacency == 2:
+                    actions.append((row_number, j + 1, 1))
+            elif current == previous == 1:
+                if before_adjacency == 2:
+                    actions.append((row_number, j - 2, 0))
+                if after_adjacency == 2:
+                    actions.append((row_number, j + 1, 0))
+        return actions
+
+    def two_adjacents_vertical(self, col_number: int):
+        """Devolve ações a executar caso existam dois números
+        iguais seguidos adjacentes na mesma coluna"""
+        actions = []
+        row = self.get_col(col_number)
+        for i in range(1, len(self.board)):
+            current = self.get_number(i, col_number)
+            previous = self.get_number(i - 1, col_number)
+            before_adjacency = self.get_number(i - 2, col_number)
+            after_adjacency = self.get_number(i + 1, col_number)
+            if current == previous == 0:
+                if before_adjacency == 2:
+                    actions.append((i - 2, col_number, 1))
+                if after_adjacency == 2:
+                    actions.append((i + 1, col_number, 1))
+            elif current == previous == 1:
+                if before_adjacency == 2:
+                    actions.append((i - 2, col_number, 0))
+                if after_adjacency == 2:
+                    actions.append((i + 1, col_number, 0))
+        return actions
+
     @staticmethod
     def parse_instance_from_stdin():
         """Lê o test do standard input (stdin) que é passado como argumento
