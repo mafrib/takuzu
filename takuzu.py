@@ -37,51 +37,43 @@ class Board:
     """Representação interna de um tabuleiro de Takuzu."""
 
     def __init__(self, n):
-        """"Inicializa um tabuleiro vazio."""
-        self.board = np.full((n,n), 2)
-
+        """Inicializa um tabuleiro vazio."""
+        self.board = np.full((n, n), 2)
 
     def __len__(self):
         """Devolve a dimensão (N) do tabuleiro N x N"""
         return len(self.board)
 
-
     def __str__(self):
         """Retorna representação externa do tabuleiro"""
         return "\n".join("\t".join(map(str, row)) for row in self.board)
 
-
     def update(self, row: int, col: int, number: int):
         """Atualiza o valor de uma posição no tabuleiro."""
         self.board[row, col] = number
-
 
     def copy(self):
         """Devolve uma cópia profunda do tabuleiro"""
         newBoard = Board(len(self.board))
         for i in range(len(self.board)):
             for j in range(len(self.board)):
-                newBoard.update(i, j, self.get_number(i,j))
+                newBoard.update(i, j, self.get_number(i, j))
         return newBoard
 
-
-    def get_line(self, row: int):
+    def get_row(self, row: int):
         """Devolve tuplo contendo a respetiva linha do tabuleiro"""
         return tuple(self.board[row])
-
 
     def get_col(self, col: int):
         """Devolve tuplo contendo a respetiva coluna do tabuleiro"""
         return tuple(self.board[:, col])
 
-
-    def get_lines(self):
+    def get_rows(self):
         """Devolve tuplo contendo as linhas do tabuleiro"""
         lines = ()
         for i in range(len(self.board)):
-            lines += (self.get_line(i),)
+            lines += (self.get_row(i),)
         return lines
-
 
     def get_cols(self):
         """Devolve tuplo contendo as colunas do tabuleiro"""
@@ -162,6 +154,7 @@ class Board:
 
         # TODO voltar a mudar para a submissão
         from sys import stdin
+
         n = int(stdin.readline())
         board = Board(n)
 
@@ -185,7 +178,6 @@ class Board:
         #         board.update(i, j, line[j])
 
         # return board
-
 
     # TODO: outros metodos da classe
 
@@ -228,7 +220,7 @@ class Takuzu(Problem):
         - número de zeros e uns válidos
         - restrições de adjacência"""
 
-        lines = state.board.get_lines()
+        lines = state.board.get_rows()
         cols = state.board.get_cols()
 
         if not state.board.all_diff(lines) or not state.board.all_diff(cols):
@@ -247,7 +239,6 @@ class Takuzu(Problem):
                     return False
 
         return True
-
 
     def result(self, state: TakuzuState, action):
         """Retorna o estado resultante de executar a 'action' sobre
@@ -289,7 +280,6 @@ class Takuzu(Problem):
         #             return False
 
         return True
-
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
