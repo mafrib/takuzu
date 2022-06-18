@@ -268,6 +268,11 @@ class Takuzu(Problem):
                         actions.append((i, j, number_to_place))
 
         for i in range(len(state.board)):
+            two_adj_horiz = state.board.two_adjacents_horizontal(i)
+            if two_adj_horiz != []:
+                for x in two_adj_horiz:
+                    actions.append(x)
+
             number_to_place = state.board.check_counter_row(i)
             if number_to_place != 2:
                 for j in range(len(state.board)):
@@ -275,6 +280,11 @@ class Takuzu(Problem):
                         actions.append((i, j, number_to_place))
 
         for j in range(len(state.board)):
+            two_adj_vertic = state.board.two_adjacents_vertical(j)
+            if two_adj_vertic != []:
+                for x in two_adj_vertic:
+                    actions.append(x)
+
             number_to_place = state.board.check_counter_col(j)
             if number_to_place != 2:
                 for i in range(len(state.board)):
