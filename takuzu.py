@@ -90,6 +90,8 @@ class Board:
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
+        if row < 0 or row >= len(self.board) or col < 0 or col >= len(self.board):
+            return None
         return self.board[row, col]
 
     def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
@@ -154,9 +156,6 @@ class Board:
 
         col = self.get_col(col_number)
         limit = np.ceil(len(self.board) / 2)
-        # print("Limit: ", limit)
-        # print("Zeros: ", col.count(0))
-        # print("Ones:", col.count(1))
         if col.count(0) == limit:
             return 1
         elif col.count(1) == limit:
