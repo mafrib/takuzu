@@ -92,15 +92,6 @@ class Board:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.board[row, col]
 
-
-    def is_valid_count(self, tup: tuple) -> bool:
-        """Devolve True se o número de zeros e uns da linha ou
-        coluna é válido de acordo com as restrições do problema."""
-        zeros = tup.count(0)
-        ones = tup.count(1)
-        return True if abs(zeros - ones) < 2 else False
-
-
     def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
