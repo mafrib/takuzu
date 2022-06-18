@@ -212,7 +212,6 @@ class Takuzu(Problem):
 
         self.initial = TakuzuState(board)
 
-
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
@@ -221,21 +220,25 @@ class Takuzu(Problem):
         for i in range(len(state.board)):
             for j in range(len(state.board)):
                 if state.board.get_number(i, j) == 2:
-                  if tuple(state.board.board[i]).count(0) >= np.ceil(len(state.board) / 2):
-                      if Takuzu.is_valid_state(self.result(state, (i, j, 1))):
-                          actions.append((i, j, 1))
-                  elif tuple(state.board.board[i]).count(1) >= np.ceil(len(state.board) / 2):
-                      if Takuzu.is_valid_state(self.result(state, (i, j, 1))):
-                          actions.append((i, j, 0))
-                  else:
-                      if Takuzu.is_valid_state(self.result(state, (i, j, 0))):
-                          actions.append((i, j, 0))
-                      elif Takuzu.is_valid_state(self.result(state, (i, j, 1))):
-                          actions.append((i, j, 1))
+                    number_to_place = state.board.check_equal_adjacent(i, j)
+                    if number_to_place != 2:
+                        actions.append((i, j, number_to_place))
 
+        for i in range(len(state.board)):
+            number_to_place = state.board.check_counter_row(i)
+            if number_to_place != 2:
+                for j in range(len(state.board)):
+                    if state.board.get_number(i, j) == 2:
+                        actions.append((i, j, number_to_place))
 
-        return actions
+        for j in range(len(state.board)):
+            number_to_place = state.board.check_counter_col(j)
+            if number_to_place != 2:
+                for i in range(len(state.board)):
+                    if state.board.get_number(i, j) == 2:
+                        actions.append((i, j, number_to_place))
 
+        return list(set(actions))
 
     @staticmethod
     def is_valid_state(state: TakuzuState) -> bool:
