@@ -82,13 +82,11 @@ class Board:
             cols += (self.get_col(i),)
         return cols
 
-
     def all_diff(self, tups) -> bool:
         """Devolve True se todos os subtuplos forem diferentes uns dos outros."""
-        if (len(set(tups)) == len(self.board)):
+        if len(set(tups)) == len(self.board):
             return True
         return False
-
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
@@ -106,20 +104,19 @@ class Board:
     def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
-        if (row == 0):
+        if row == 0:
             return (self.board[row + 1, col], None)
-        elif (row == len(self.board) - 1):
+        elif row == len(self.board) - 1:
             return (None, self.board[row - 1, col])
         else:
             return (self.board[row + 1, col], self.board[row - 1, col])
 
-
     def adjacent_horizontal_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
-        if (col == 0):
+        if col == 0:
             return (None, self.board[row, col + 1])
-        elif (col == len(self.board) - 1):
+        elif col == len(self.board) - 1:
             return (self.board[row, col - 1], None)
         else:
             return (self.board[row, col - 1], self.board[row, col + 1])
