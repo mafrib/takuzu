@@ -140,19 +140,26 @@ class Board:
         else:
             return 2
 
-    def is_valid_adjacent(self) -> bool:
+    def is_valid_adjacent(self, tup: tuple) -> bool:
+        """Devolve True se a linha ou coluna não tiver mais do
+        que dois números iguais adjacentes."""
+        for i in range(2, len(tup)):
+            if (tup[i - 2] == tup[i - 1] == tup[i]) and tup[i] != 2:
+                return False
+
+        return True
+
+    def is_valid_adjacents(self) -> bool:
         """Devolve True se cada linha e coluna não tiver mais do
         que dois números iguais adjacentes."""
-        for i in range(len(self.board)):
-            for j in range(len(self.board)):
-                adjacent_vertical = self.adjacent_vertical_numbers(i, j)
-                adjacent_horizontal = self.adjacent_horizontal_numbers(i, j)
-                current = self.get_number(i, j)
-                if (
-                    current == adjacent_vertical[0] == adjacent_vertical[1]
-                    or current == adjacent_horizontal[0] == adjacent_horizontal[1]
-                ):
-                    return False
+        for row in self.get_rows():
+            if not self.is_valid_adjacent(row):
+                return False
+
+        for col in self.get_cols():
+            if not self.is_valid_adjacent(col):
+                return False
+
         return True
 
     def is_valid_count(self, tup: tuple) -> bool:
@@ -204,16 +211,18 @@ class Board:
             after_adjacency = (
                 self.get_number(row_number, j + 1) if j + 1 < len(self.board) else None
             )
-            if current == previous == 0:
-                if before_adjacency == 2:
+
+            if before_adjacency == 2:
+                if current == previous == 0:
                     actions.append((row_number, j - 2, 1))
-                if after_adjacency == 2:
-                    actions.append((row_number, j + 1, 1))
-            elif current == previous == 1:
-                if before_adjacency == 2:
+                elif current == previous == 1:
                     actions.append((row_number, j - 2, 0))
-                if after_adjacency == 2:
+            if after_adjacency == 2:
+                if current == previous == 0:
+                    actions.append((row_number, j + 1, 1))
+                elif current == previous == 1:
                     actions.append((row_number, j + 1, 0))
+
         return actions
 
     def two_adjacents_vertical(self, col_number: int):
@@ -230,16 +239,18 @@ class Board:
             after_adjacency = (
                 self.get_number(i + 1, col_number) if i + 1 < len(self.board) else None
             )
-            if current == previous == 0:
-                if before_adjacency == 2:
+
+            if before_adjacency == 2:
+                if current == previous == 0:
                     actions.append((i - 2, col_number, 1))
-                if after_adjacency == 2:
-                    actions.append((i + 1, col_number, 1))
-            elif current == previous == 1:
-                if before_adjacency == 2:
+                elif current == previous == 1:
                     actions.append((i - 2, col_number, 0))
-                if after_adjacency == 2:
+            if after_adjacency == 2:
+                if current == previous == 0:
+                    actions.append((i + 1, col_number, 1))
+                elif current == previous == 1:
                     actions.append((i + 1, col_number, 0))
+
         return actions
 
     @staticmethod
@@ -268,6 +279,47 @@ class Board:
 
         return Board(board)
 
+    def check_only_option(self, tup: tuple, is_row: bool, row_or_col_number: int):
+        """Devolve uma lista de ações a executar caso seja
+        possível prever incoerências na linha ou coluna dadas."""
+        empty_indices = []
+        for i in range(len(tup)):
+            if tup[i] == 2:
+                empty_indices.append(i)
+
+        options = [tup]
+        while options[0].count(2) > 0:
+            option1 = ()
+            option2 = ()
+            for i in range(len(options[0])):
+                if options[0][i] != 2:
+                    option1 += (options[0][i],)
+                else:
+                    option2 = option1 + (1,) + options[0][i + 1 :]
+                    option1 = option1 + (0,) + options[0][i + 1 :]
+                    break
+            options.pop(0)
+            options.append(option1)
+            options.append(option2)
+
+        validOptions = []
+        for option in options:
+            if self.is_valid_count(option) and self.is_valid_adjacent(option):
+                validOptions.append(option)
+
+        actions = []
+        for i in empty_indices:
+            uniques = set()
+            for j in range(len(validOptions)):
+                uniques.add(validOptions[j][i])
+            if len(uniques) == 1:
+                if is_row:
+                    actions.append((row_or_col_number, i, uniques.pop()))
+                else:
+                    actions.append((i, row_or_col_number, uniques.pop()))
+
+        return actions
+
     # TODO: outros metodos da classe
 
 
@@ -290,10 +342,8 @@ class Takuzu(Problem):
                         actions.append((i, j, number_to_place))
 
         for i in range(len(state.board)):
-            two_adj_horiz = state.board.two_adjacents_horizontal(i)
-            if two_adj_horiz != []:
-                for x in two_adj_horiz:
-                    actions.append(x)
+            actions += state.board.two_adjacents_horizontal(i)
+
             number_to_place = state.board.check_counter_row(i)
             if number_to_place != 2:
                 for j in range(len(state.board)):
@@ -301,15 +351,22 @@ class Takuzu(Problem):
                         actions.append((i, j, number_to_place))
 
         for j in range(len(state.board)):
-            two_adj_vertic = state.board.two_adjacents_vertical(j)
-            if two_adj_vertic != []:
-                for x in two_adj_vertic:
-                    actions.append(x)
+            actions += state.board.two_adjacents_vertical(j)
+
             number_to_place = state.board.check_counter_col(j)
             if number_to_place != 2:
                 for i in range(len(state.board)):
                     if state.board.get_number(i, j) == 2:
                         actions.append((i, j, number_to_place))
+
+        if actions == []:
+            for i in range(len(state.board)):
+                actions += state.board.check_only_option(
+                    state.board.get_row(i), True, i
+                )
+                actions += state.board.check_only_option(
+                    state.board.get_col(i), False, i
+                )
 
         if actions == []:
             simulation = []
@@ -346,7 +403,7 @@ class Takuzu(Problem):
 
         for i in range(len(state.board)):
             for j in range(len(state.board)):
-                if not state.board.is_valid_adjacent():
+                if not state.board.is_valid_adjacents():
                     return False
 
         return True
@@ -389,15 +446,18 @@ class Takuzu(Problem):
 
         # for i in range(len(state.board)):
         #     for j in range(len(state.board)):
-        #         if not state.board.is_valid_adjacent():
+        #         if not state.board.is_valid_adjacents():
         #             return False
 
         return True
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
-        # TODO
-        pass
+        empty_spaces = 0
+        for row in node.state.board.get_rows():
+            empty_spaces += row.count(2)
+
+        return empty_spaces
 
     # TODO: outros metodos da classe
 
