@@ -90,8 +90,6 @@ class Board:
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
-        if row < 0 or row >= len(self.board) or col < 0 or col >= len(self.board):
-            return None
         return self.board[row, col]
 
     def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
@@ -191,8 +189,12 @@ class Board:
         for j in range(1, len(self.board)):
             current = self.get_number(row_number, j)
             previous = self.get_number(row_number, j - 1)
-            before_adjacency = self.get_number(row_number, j - 2)
-            after_adjacency = self.get_number(row_number, j + 1)
+            before_adjacency = (
+                self.get_number(row_number, j - 2) if j - 2 >= 0 else None
+            )
+            after_adjacency = (
+                self.get_number(row_number, j + 1) if j + 1 < len(self.board) else None
+            )
             if current == previous == 0:
                 if before_adjacency == 2:
                     actions.append((row_number, j - 2, 1))
@@ -213,8 +215,12 @@ class Board:
         for i in range(1, len(self.board)):
             current = self.get_number(i, col_number)
             previous = self.get_number(i - 1, col_number)
-            before_adjacency = self.get_number(i - 2, col_number)
-            after_adjacency = self.get_number(i + 1, col_number)
+            before_adjacency = (
+                self.get_number(i - 2, col_number) if i - 2 >= 0 else None
+            )
+            after_adjacency = (
+                self.get_number(i + 1, col_number) if i + 1 < len(self.board) else None
+            )
             if current == previous == 0:
                 if before_adjacency == 2:
                     actions.append((i - 2, col_number, 1))
