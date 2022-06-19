@@ -124,8 +124,6 @@ class Board:
             adjacent_horizontal[0] == adjacent_horizontal[1] == 1
             or adjacent_vertical[0] == adjacent_vertical[1] == 1
         ):
-            print("adjacent_horizontal:", adjacent_horizontal)
-            print("adjacent_vertical:", adjacent_vertical)
             return 0
         elif (
             adjacent_horizontal[0] == adjacent_horizontal[1] == 0
@@ -134,6 +132,28 @@ class Board:
             return 1
         else:
             return 2
+
+    def is_valid_adjacent(self) -> bool:
+        """Devolve True se cada linha e coluna não tiver mais do
+        que dois números iguais adjacentes."""
+        for i in range(len(self.board)):
+            for j in range(len(self.board)):
+                adjacent_vertical = self.adjacent_vertical_numbers(i, j)
+                adjacent_horizontal = self.adjacent_horizontal_numbers(i, j)
+                current = self.get_number(i, j)
+                if (
+                    current == adjacent_vertical[0] == adjacent_vertical[1]
+                    or current == adjacent_horizontal[0] == adjacent_horizontal[1]
+                ):
+                    return False
+        return True
+
+    def is_valid_count(self, tup: tuple) -> bool:
+        """Devolve True se o número de zeros e uns da linha ou
+        coluna é válido de acordo com as restrições do problema."""
+        zeros = tup.count(0)
+        ones = tup.count(1)
+        return True if abs(zeros - ones) < 2 else False
 
     def check_counter_row(self, row_number: int) -> int:
         """Devolve o número a preencher caso o número de zeros ou uns
@@ -272,7 +292,6 @@ class Takuzu(Problem):
             if two_adj_horiz != []:
                 for x in two_adj_horiz:
                     actions.append(x)
-
             number_to_place = state.board.check_counter_row(i)
             if number_to_place != 2:
                 for j in range(len(state.board)):
@@ -284,12 +303,22 @@ class Takuzu(Problem):
             if two_adj_vertic != []:
                 for x in two_adj_vertic:
                     actions.append(x)
-
             number_to_place = state.board.check_counter_col(j)
             if number_to_place != 2:
                 for i in range(len(state.board)):
                     if state.board.get_number(i, j) == 2:
                         actions.append((i, j, number_to_place))
+
+        if actions == []:
+            simulation = []
+            for i in range(len(state.board)):
+                for j in range(len(state.board)):
+                    if state.board.get_number(i, j) == 2:
+                        simulation.append((i, j, 0))
+                        simulation.append((i, j, 1))
+            for s in simulation:
+                if self.is_valid_state(self.result(state, s)):
+                    actions.append(s)
 
         return list(set(actions))
 
@@ -300,14 +329,14 @@ class Takuzu(Problem):
         - número de zeros e uns válidos
         - restrições de adjacência"""
 
-        lines = state.board.get_rows()
+        rows = state.board.get_rows()
         cols = state.board.get_cols()
 
-        if not state.board.all_diff(lines) or not state.board.all_diff(cols):
+        if not state.board.all_diff(rows) or not state.board.all_diff(cols):
             return False
 
-        for line in lines:
-            if not state.board.is_valid_count(line):
+        for row in rows:
+            if not state.board.is_valid_count(row):
                 return False
         for col in cols:
             if not state.board.is_valid_count(col):
@@ -330,7 +359,6 @@ class Takuzu(Problem):
         newState.board.update(action[0], action[1], action[2])
         return newState
 
-
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
@@ -340,6 +368,12 @@ class Takuzu(Problem):
             for j in range(len(state.board)):
                 if state.board.get_number(i, j) == 2:
                     return False
+
+        rows = state.board.get_rows()
+        cols = state.board.get_cols()
+
+        if not state.board.all_diff(rows) or not state.board.all_diff(cols):
+            return False
 
         # lines = state.board.get_lines()
         # cols = state.board.get_cols()
