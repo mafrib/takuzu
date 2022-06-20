@@ -342,25 +342,26 @@ class Takuzu(Problem):
                 if state.board.get_number(i, j) == 2:
                     number_to_place = state.board.check_equal_adjacent(i, j)
                     if number_to_place != 2:
-                        actions.append((i, j, number_to_place))
+                        return [(i, j, number_to_place)]
 
         for i in range(len(state.board)):
-            actions += state.board.two_adjacents_horizontal(i)
-
             number_to_place = state.board.check_counter_row(i)
             if number_to_place != 2:
                 for j in range(len(state.board)):
                     if state.board.get_number(i, j) == 2:
-                        actions.append((i, j, number_to_place))
+                        return [(i, j, number_to_place)]
 
         for j in range(len(state.board)):
-            actions += state.board.two_adjacents_vertical(j)
-
             number_to_place = state.board.check_counter_col(j)
             if number_to_place != 2:
                 for i in range(len(state.board)):
                     if state.board.get_number(i, j) == 2:
-                        actions.append((i, j, number_to_place))
+                        return [(i, j, number_to_place)]
+
+        # TODO devolver logo aqui e no debaixo; só devolver mais que um quando não for inteligente
+        for i in range(len(state.board)):
+            actions += state.board.two_adjacents_horizontal(i)
+            actions += state.board.two_adjacents_vertical(i)
 
         if actions == []:
             for i in range(len(state.board)):
