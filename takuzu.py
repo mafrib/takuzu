@@ -92,10 +92,13 @@ class Board:
         return cols
 
     def all_diff(self, tups) -> bool:
-        """Devolve True se todos os subtuplos forem diferentes uns dos outros."""
-        if len(set(tups)) == len(self.board):
-            return True
-        return False
+        """Devolve True se todos os subtuplos preenchidos forem diferentes uns dos outros."""
+        trimmed_tups = ()
+        for tup in tups:
+            if tup.count(2) == 0:
+                trimmed_tups += (tup,)
+
+        return len(set(trimmed_tups)) == len(trimmed_tups)
 
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
