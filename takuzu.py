@@ -30,8 +30,6 @@ class TakuzuState:
     def __lt__(self, other):
         return self.id < other.id
 
-    # TODO: outros metodos da classe
-
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu."""
@@ -323,8 +321,6 @@ class Board:
 
         return actions
 
-    # TODO: outros metodos da classe
-
 
 class Takuzu(Problem):
     def __init__(self, board: Board):
@@ -335,7 +331,6 @@ class Takuzu(Problem):
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-
         actions = []
         for i in range(len(state.board)):
             for j in range(len(state.board)):
@@ -358,7 +353,6 @@ class Takuzu(Problem):
                     if state.board.get_number(i, j) == 2:
                         return [(i, j, number_to_place)]
 
-        # TODO devolver logo aqui e no debaixo; só devolver mais que um quando não for inteligente
         for i in range(len(state.board)):
             actions += state.board.two_adjacents_horizontal(i)
             actions += state.board.two_adjacents_vertical(i)
@@ -373,15 +367,11 @@ class Takuzu(Problem):
                 )
 
         if actions == []:
-            simulation = []
             for i in range(len(state.board)):
                 for j in range(len(state.board)):
                     if state.board.get_number(i, j) == 2:
-                        simulation.append((i, j, 0))
-                        simulation.append((i, j, 1))
-            for s in simulation:
-                if self.is_valid_state(self.result(state, s)):
-                    actions.append(s)
+                        actions.append((i, j, 0))
+                        actions.append((i, j, 1))
 
         return list(set(actions))
 
@@ -435,24 +425,6 @@ class Takuzu(Problem):
         if not state.board.all_diff(rows) or not state.board.all_diff(cols):
             return False
 
-        # lines = state.board.get_lines()
-        # cols = state.board.get_cols()
-
-        # if not state.board.all_diff(lines) or not state.board.all_diff(cols):
-        #     return False
-
-        # for line in lines:
-        #     if not state.board.is_valid_count(line):
-        #         return False
-        # for col in cols:
-        #     if not state.board.is_valid_count(col):
-        #         return False
-
-        # for i in range(len(state.board)):
-        #     for j in range(len(state.board)):
-        #         if not state.board.is_valid_adjacents():
-        #             return False
-
         return True
 
     def h(self, node: Node):
@@ -462,8 +434,6 @@ class Takuzu(Problem):
             empty_spaces += row.count(2)
 
         return empty_spaces
-
-    # TODO: outros metodos da classe
 
 
 if __name__ == "__main__":
